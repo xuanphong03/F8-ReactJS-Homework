@@ -33,7 +33,7 @@ function FeedbackAboutMe() {
     { id: 3, avatar: Avatar03 },
   ];
   const [currentClientId, setCurrentClientId] = useState(3);
-  const [currentClientImage, setCurrentClientAvatar] = useState(() => {
+  const [currentClientAvatar, setCurrentClientAvatar] = useState(() => {
     const currentClient = CLIENTS.find(({ id }) => id === currentClientId);
     return currentClient ? currentClient.avatar : null;
   });
@@ -82,7 +82,7 @@ function FeedbackAboutMe() {
           </div>
           <img
             className="h-80 w-72 rounded-md object-cover"
-            src={currentClientImage}
+            src={currentClientAvatar}
           />
         </div>
       </div>
