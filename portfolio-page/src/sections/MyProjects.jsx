@@ -68,17 +68,17 @@ function MyProjects() {
   ];
   return (
     <section className="py-28">
-      <div className="mx-5 mb-20 md:mx-0 2xl:mx-20">
+      <div className="mb-20 sm:mx-5 md:mx-0 2xl:mx-20">
         <h2 className="mb-4 text-center text-4xl font-semibold leading-relaxed">
           My Projects
         </h2>
-        <p className="text-secondaryColor px-4 text-center text-xl leading-relaxed lg:mx-60 xl:mx-72 2xl:mx-80">
+        <p className="px-4 text-center text-xl leading-relaxed text-secondaryColor lg:mx-60 xl:mx-72 2xl:mx-80">
           Whether you have a mobile app idea that needs to come to life or a
           website that requires a facelift, I'm here to turn your digital dreams
           into reality.
         </p>
       </div>
-      <div className="mx-5 md:mx-0 xl:mx-10 2xl:mx-20">
+      <div className="sm:mx-5 md:mx-0 xl:mx-10 2xl:mx-20">
         <ProjectsList projects={MY_PROJECTS} />
       </div>
     </section>

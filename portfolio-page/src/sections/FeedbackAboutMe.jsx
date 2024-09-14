@@ -48,11 +48,11 @@ function FeedbackAboutMe() {
 
   return (
     <section className="py-12 xl:mx-32 2xl:mx-64">
-      <div className="mx-5 mb-20 md:mx-0">
+      <div className="mb-20 sm:mx-5 md:mx-0">
         <h2 className="mb-4 text-center text-4xl font-semibold tracking-wider">
           What Clients Say
         </h2>
-        <p className="text-secondaryColor px-4 text-center text-xl">
+        <p className="px-4 text-center text-xl text-secondaryColor">
           Discover what clients have to say about their experiences working with
           me. My client's satisfaction is my greatest achievement!
         </p>
@@ -63,13 +63,13 @@ function FeedbackAboutMe() {
             <h3 className="mb-4 max-w-[50%] text-3xl font-bold leading-normal">
               Mobile App Development
             </h3>
-            <p className="text-secondaryColor mb-3 text-base leading-relaxed lg:max-w-[70%]">
+            <p className="mb-3 text-base leading-relaxed text-secondaryColor lg:max-w-[70%]">
               I had the pleasure of working with Lily on a critical web
               development project, and I can confidently say that their
               expertise and professionalism exceeded my expectations.
             </p>
             <h6 className="mb-1 font-semibold">Michael - Technical Manager</h6>
-            <p className="text-secondaryColor mb-5 text-sm">
+            <p className="mb-5 text-sm text-secondaryColor">
               Marketing @ APPLE INC.
             </p>
             <div>

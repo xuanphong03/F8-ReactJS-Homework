@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.transition-height {
+  transition: height 0.3s ease;
+}
+
 input.customized + label {
   transition: top 0.2s ease;
 }

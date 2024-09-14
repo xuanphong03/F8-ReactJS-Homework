@@ -34,7 +34,7 @@ function Header({ onHeaderHeightChange }) {
       className="sticky left-0 right-0 top-0 z-50 bg-white bg-opacity-80 p-4 backdrop-blur-2xl"
     >
       <div className="lg:mx-4 lg:flex lg:items-center lg:justify-between xl:mx-14 2xl:mx-24">
-        <div className="mx-8 flex h-10 items-center justify-between md:mx-2">
+        <div className="mx-0 flex h-10 items-center justify-between sm:mx-8 md:mx-2">
           <a href="#" className="text-blue-gray-900 text-lg font-bold">
             Material Tailwind
           </a>
@@ -76,9 +76,9 @@ function Header({ onHeaderHeightChange }) {
         <div
           ref={menuRef}
           style={{ height: `${menuHeight}px` }}
-          className={`mx-8 mt-3 overflow-hidden border-t px-2 pt-4 transition-all duration-500 md:mx-2 lg:hidden lg:border-0`}
+          className={`transition-height mx-[2px] mt-3 overflow-hidden border-t px-2 duration-500 sm:mx-8 md:mx-2 lg:hidden lg:border-0 ${isVisibleMenuMobile ? 'border-0' : ''}`}
         >
-          <nav>
+          <nav className="pt-4">
             <ul className="flex flex-col gap-5">
               <li>
                 <a className="flex items-center gap-3" href="#page">
@@ -100,12 +100,8 @@ function Header({ onHeaderHeightChange }) {
             </ul>
           </nav>
           <div className="my-4 mt-6 flex items-center gap-2">
-            <button className="h-10 rounded-md px-6 py-3 text-xs font-medium uppercase">
-              Sign in
-            </button>
-            <button className="h-10 rounded-md bg-primaryColor px-6 py-3 text-xs font-medium uppercase text-white">
-              Blocks
-            </button>
+            <Button content="Sign in" />
+            <Button content="Blocks" isSolid />
           </div>
         </div>
       </div>

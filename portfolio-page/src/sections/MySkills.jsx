@@ -55,10 +55,10 @@ function MySkills() {
   ];
   return (
     <section>
-      <div className="mx-5 mb-20">
+      <div className="mb-20 sm:mx-5">
         <h2 className="mb-2 text-center font-bold">My skills</h2>
         <h3 className="mb-4 text-center text-5xl font-semibold">What I do</h3>
-        <p className="text-secondaryColor text-center text-xl leading-relaxed lg:mx-20 xl:mx-24 2xl:mx-28">
+        <p className="text-center text-xl leading-relaxed text-secondaryColor lg:mx-20 xl:mx-24 2xl:mx-28">
           I'm not just a developer; I'm a digital dreamweaver. Crafting
           immersive online experiences is not just a job but my calling.
           Discover below how I can help you.

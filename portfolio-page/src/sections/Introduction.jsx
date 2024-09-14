@@ -5,7 +5,7 @@ import Button from '~/components/Button';
 function Introduction() {
   return (
     <section className="py-8">
-      <div className="mx-4 flex flex-col gap-10 md:mx-0 lg:flex-row-reverse lg:items-center xl:mx-10 2xl:mx-20 2xl:min-h-[60vh]">
+      <div className="mx-0 flex flex-col gap-10 sm:mx-4 md:mx-0 lg:flex-row-reverse lg:items-center xl:mx-10 2xl:mx-20 2xl:min-h-[60vh]">
         <img
           className="h-[576px] w-full rounded-xl object-cover lg:w-1/2 lg:max-w-[50%] lg:basis-1/2"
           alt="introduction image"
