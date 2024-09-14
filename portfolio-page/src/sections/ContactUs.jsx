@@ -42,7 +42,7 @@ function ContactUs() {
         </div>
         <div className="flex flex-wrap gap-5 p-5 md:px-10 lg:max-w-[50%] lg:basis-1/2 xl:max-w-[60%] xl:basis-3/5">
           <div className="flex basis-full flex-wrap gap-5 lg:flex-nowrap">
-            <div className="w-full lg:max-w-[50%] lg:basis-1/2">
+            <div className="mb-2 w-full lg:max-w-[50%] lg:basis-1/2">
               <InputField
                 id="first-name"
                 type="text"
@@ -51,7 +51,7 @@ function ContactUs() {
                 placeholder="eg. Lucas"
               />
             </div>
-            <div className="w-full lg:max-w-[50%] lg:basis-1/2">
+            <div className="mb-2 w-full lg:max-w-[50%] lg:basis-1/2">
               <InputField
                 id="last-name"
                 type="text"
@@ -61,7 +61,7 @@ function ContactUs() {
               />
             </div>
           </div>
-          <div className="w-full">
+          <div className="mb-2 w-full">
             <InputField
               id="email"
               type="email"
@@ -70,7 +70,7 @@ function ContactUs() {
               placeholder="eg. lucas@gmail.com"
             />
           </div>
-          <div className="w-full">
+          <div className="mb-5 w-full">
             <RadioField
               options={InterestedServices}
               label="What are you interested on?"

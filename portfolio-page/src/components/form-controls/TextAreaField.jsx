@@ -8,7 +8,6 @@ TextAreaField.propTypes = {
 };
 
 function TextAreaField({ label, id, name }) {
-  const [isFocused, setIsFocused] = useState(false);
   const [currentValue, setCurrentValue] = useState('');
   const handleInputChange = (e) => {
     const { value: newValue } = e.target;
@@ -16,22 +15,18 @@ function TextAreaField({ label, id, name }) {
   };
   return (
     <div>
-      <label
-        className={`text-sm font-medium ${isFocused ? 'text-gray-700' : 'text-[#889EA8]'}`}
-        htmlFor={id}
-      >
-        {label}
-      </label>
-      <div className="w-full">
+      <div className="relative w-full">
         <textarea
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           value={currentValue}
           onChange={handleInputChange}
           name={name}
           rows={4}
-          className={`w-full resize-none border-b border-solid px-[1px] pb-2 pt-3 text-sm outline-none ${isFocused ? 'border-gray-700' : 'border-gray-200'}`}
+          className={`textarea-control w-full resize-none border-b border-solid border-gray-200 px-[1px] pb-2 pt-3 text-sm outline-none`}
         ></textarea>
+        <div className="absolute bottom-0 left-1/2 right-1/2 -translate-x-1/2"></div>
+        <label className="absolute -top-4 left-0 text-sm" htmlFor={id}>
+          {label}
+        </label>
       </div>
     </div>
   );

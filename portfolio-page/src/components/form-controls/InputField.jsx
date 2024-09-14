@@ -10,7 +10,6 @@ InputField.propTypes = {
 };
 
 function InputField({ id, type, name, label, placeholder }) {
-  const [isFocused, setIsFocused] = useState(false);
   const [currentValue, setCurrentValue] = useState('');
 
   const handleInputChange = (e) => {
@@ -20,23 +19,20 @@ function InputField({ id, type, name, label, placeholder }) {
 
   return (
     <div>
-      <label
-        className={`text-sm font-medium ${isFocused ? 'text-gray-700' : 'text-[#889EA8]'}`}
-        htmlFor={id}
-      >
-        {label}
-      </label>
-      <div className="w-full">
+      <div className="relative w-full">
         <input
+          id={id}
           value={currentValue}
           onChange={handleInputChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           type={type}
           name={name}
           placeholder={placeholder}
-          className={`w-full border-b border-solid px-[1px] pb-2 pt-3 text-sm outline-none ${isFocused ? 'border-gray-700' : 'border-gray-200'}`}
+          className={`input-control w-full border-b border-solid border-gray-200 px-[1px] pb-2 pt-3 text-sm outline-none`}
         />
+        <div className="absolute bottom-0 left-1/2 right-1/2 -translate-x-1/2"></div>
+        <label className="absolute -top-4 left-0 text-sm" htmlFor={id}>
+          {label}
+        </label>
       </div>
     </div>
   );

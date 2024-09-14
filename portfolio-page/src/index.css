@@ -3,11 +3,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+/* Transition height */
 .transition-height {
   transition: height 0.3s ease;
 }
-
+/* Customize input email */
 input.customized + label {
   transition: top 0.2s ease;
 }
@@ -24,4 +24,25 @@ input.customized:not(:placeholder-shown) + label {
   font-size: 12px;
   background: #fff;
   padding-inline: 4px;
+}
+
+/* Customize input control */
+input.input-control ~ label,
+textarea.textarea-control ~ label {
+  color: rgb(97 126 140);
+}
+input.input-control:focus ~ label,
+textarea.textarea-control:focus ~ label {
+  color: #212121;
+}
+input.input-control + div,
+textarea.textarea-control + div {
+  right: 50%;
+  border: 0px solid #000;
+  transition: right 0.3s ease;
+}
+input.input-control:focus + div,
+textarea.textarea-control:focus + div {
+  right: -50%;
+  border-width: 1px;
 }

@@ -23,7 +23,7 @@ function RadioField({ id, name, label, options = [] }) {
       <label className="text-sm font-medium text-[#889EA8]" htmlFor={id}>
         {label}
       </label>
-      <div className="mt-2 flex flex-wrap gap-4">
+      <div className="mt-3 flex flex-wrap gap-4">
         {options.map(({ id, name: serviceName }) => {
           return (
             <div key={id}>
