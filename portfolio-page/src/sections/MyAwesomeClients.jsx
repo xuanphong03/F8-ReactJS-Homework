@@ -6,7 +6,7 @@ import LogoAmazon from '~/assets/logos/amazon.svg';
 import LogoNetflex from '~/assets/logos/netflix.svg';
 function MyAwesomeClients() {
   return (
-    <section className="py-28">
+    <section id="awesome-clients" className="py-28">
       <div className="mx-0 flex flex-col items-center gap-8 sm:mx-5 md:mx-0">
         <h2 className="text-base font-semibold text-[#263228]">
           My awesome clients

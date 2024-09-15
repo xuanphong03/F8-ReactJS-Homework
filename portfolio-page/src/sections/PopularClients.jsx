@@ -25,9 +25,9 @@ function PopularClients() {
     { id: 6, logo: LogoNetflex },
   ];
   return (
-    <section className="py-8">
+    <section id="popular-clients" className="py-8">
       <div className="pb-4">
-        <h3 className="text-secondaryColor mb-4 text-center font-semibold uppercase">
+        <h3 className="mb-4 text-center font-semibold uppercase text-secondaryColor">
           Popular Clients
         </h3>
         <h2 className="text-center text-4xl font-semibold">

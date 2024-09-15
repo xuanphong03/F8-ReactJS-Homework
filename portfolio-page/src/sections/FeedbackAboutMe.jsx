@@ -47,7 +47,7 @@ function FeedbackAboutMe() {
   };
 
   return (
-    <section className="py-12 xl:mx-32 2xl:mx-64">
+    <section id="feedback" className="py-12 xl:mx-32 2xl:mx-64">
       <div className="mb-20 sm:mx-5 md:mx-0">
         <h2 className="mb-4 text-center text-4xl font-semibold tracking-wider">
           What Clients Say

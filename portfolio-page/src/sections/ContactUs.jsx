@@ -14,7 +14,7 @@ function ContactUs() {
     { id: 4, name: 'other' },
   ];
   return (
-    <section className="py-16 sm:mx-5 lg:mx-0 xl:mx-10 2xl:mx-20">
+    <section id="contact" className="py-16 sm:mx-5 lg:mx-0 xl:mx-10 2xl:mx-20">
       <div className="mb-20">
         <h2 className="mb-4 text-center text-5xl font-bold">Contact Us</h2>
         <p className="mx-auto text-center text-xl leading-relaxed text-secondaryColor lg:max-w-[45%] xl:max-w-[40%]">

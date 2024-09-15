@@ -54,7 +54,7 @@ function MySkills() {
     },
   ];
   return (
-    <section>
+    <section id="my-skills">
       <div className="mb-20 sm:mx-5">
         <h2 className="mb-2 text-center font-bold">My skills</h2>
         <h3 className="mb-4 text-center text-5xl font-semibold">What I do</h3>

@@ -67,7 +67,7 @@ function MyProjects() {
     },
   ];
   return (
-    <section className="py-28">
+    <section id="my-projects" className="py-28">
       <div className="mb-20 sm:mx-5 md:mx-0 2xl:mx-20">
         <h2 className="mb-4 text-center text-4xl font-semibold leading-relaxed">
           My Projects
