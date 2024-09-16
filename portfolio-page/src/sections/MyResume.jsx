@@ -2,8 +2,11 @@ import { FaArrowRight, FaRankingStar } from 'react-icons/fa6';
 
 function MyResume() {
   return (
-    <section id="my-resume" className="flex flex-col gap-16 py-24 lg:flex-row">
-      <div className="lg:max-w-[50%] lg:basis-1/2">
+    <section
+      id="my-resume"
+      className="grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-2"
+    >
+      <div className="col-span-1">
         <h2 className="text-4xl font-semibold leading-relaxed">My Resume</h2>
         <p className="mb-4 mt-3 leading-relaxed text-secondaryColor lg:max-w-[75%]">
           Highly skilled and creative Web Developer with 5+ years of experience
@@ -14,7 +17,7 @@ function MyResume() {
           View more <FaArrowRight />
         </button>
       </div>
-      <div className="lg:max-w-[50%] lg:basis-1/2">
+      <div className="col-span-1 grid gap-y-6 pr-0 lg:ml-auto lg:pr-12 xl:pr-32">
         <ul className="flex flex-col gap-5">
           <li className="flex items-start gap-4">
             <div className="flex size-12 items-center justify-center rounded-xl bg-primaryColor text-xl text-white shadow-lg">
