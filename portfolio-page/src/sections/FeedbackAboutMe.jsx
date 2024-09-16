@@ -48,7 +48,7 @@ function FeedbackAboutMe() {
 
   return (
     <section id="feedback" className="container mx-auto max-w-screen-lg py-12">
-      <div className="mb-20 sm:mx-5 md:mx-0">
+      <div className="mb-20">
         <h2 className="mb-4 text-center text-4xl font-semibold tracking-wider">
           What Clients Say
         </h2>
@@ -58,7 +58,7 @@ function FeedbackAboutMe() {
         </p>
       </div>
       <div className="pt-8">
-        <div className="flex flex-col gap-5 p-6 lg:flex-row">
+        <div className="flex flex-col gap-5 py-6 lg:flex-row">
           <div>
             <h3 className="mb-4 max-w-[50%] text-3xl font-bold leading-normal">
               Mobile App Development
