@@ -20,6 +20,25 @@ export default {
       boxShadow: {
         '3xl': 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
       },
+      container: {
+        center: true,
+      },
+      screens: {
+        sm: '540px',
+        // => @media (min-width: 540px) { ... }
+
+        md: '720px',
+        // => @media (min-width: 720px) { ... }
+
+        lg: '960px',
+        // => @media (min-width: 960px) { ... }
+
+        xl: '1140px',
+        // => @media (min-width: 1140px) { ... }
+
+        '2xl': '1320px',
+        // => @media (min-width: 1320px) { ... }
+      },
     },
   },
   plugins: [],

@@ -1,6 +1,6 @@
 function Main({ children }) {
   return (
-    <main id="main" className="px-8">
+    <main id="main" className="container mx-auto">
       {children}
     </main>
   );

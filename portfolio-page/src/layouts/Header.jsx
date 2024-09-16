@@ -33,9 +33,12 @@ function Header({ onHeaderHeightChange }) {
       id="header"
       className="sticky left-0 right-0 top-0 z-50 bg-white bg-opacity-80 p-4 backdrop-blur-2xl"
     >
-      <div className="lg:mx-4 lg:flex lg:items-center lg:justify-between xl:mx-14 2xl:mx-24">
-        <div className="mx-0 flex h-10 items-center justify-between sm:mx-8 md:mx-2">
-          <a href="#" className="text-blue-gray-900 text-lg font-bold">
+      <div className="container mx-auto lg:flex lg:items-center lg:justify-between">
+        <div className="mx-0 flex h-10 items-center justify-between">
+          <a
+            href="#"
+            className="text-blue-gray-900 text-lg font-bold antialiased"
+          >
             Material Tailwind
           </a>
           <button
