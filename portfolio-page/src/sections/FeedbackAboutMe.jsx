@@ -52,7 +52,7 @@ function FeedbackAboutMe() {
         <h2 className="mb-4 text-center text-4xl font-semibold tracking-wider">
           What Clients Say
         </h2>
-        <p className="px-4 text-center text-xl text-secondaryColor">
+        <p className="mx-auto block w-full px-4 text-center font-sans text-xl font-normal leading-relaxed !text-gray-500 text-inherit antialiased lg:w-8/12">
           Discover what clients have to say about their experiences working with
           me. My client's satisfaction is my greatest achievement!
         </p>
