@@ -15,6 +15,7 @@ function TodoApp() {
   const [todoList, setTodoList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [fetchTodoListStatus, setFetchTodoListStatus] = useState(false);
   const debounced = useDebounce(searchTerm, 500);
 
   const getTodoList = async (params) => {
@@ -28,6 +29,7 @@ function TodoApp() {
       throw new Error('Fetch todo list failed');
     } finally {
       setIsLoading(false);
+      setFetchTodoListStatus(true);
     }
   };
 
@@ -122,14 +124,15 @@ function TodoApp() {
             />
           </div>
           <div className="mx-auto mt-5 w-full px-5 md:w-4/5 md:px-0">
-            {isLoading &&
-              todoList.length === 0 &&
-              [...Array(3)].map((_, index) => <TodoSkeleton key={index} />)}
-            <TodoList
-              todoList={todoList}
-              handleUpdateTodo={handleUpdateTodo}
-              handleDeleteTodo={handleDeleteTodo}
-            />
+            {fetchTodoListStatus ? (
+              <TodoList
+                todoList={todoList}
+                handleUpdateTodo={handleUpdateTodo}
+                handleDeleteTodo={handleDeleteTodo}
+              />
+            ) : (
+              [...Array(1)].map((_, index) => <TodoSkeleton key={index} />)
+            )}
           </div>
         </div>
       </div>
