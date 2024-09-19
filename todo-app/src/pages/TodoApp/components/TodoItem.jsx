@@ -6,19 +6,21 @@ TodoItem.propTypes = {
 };
 
 function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
-  const [completedStatus, setCompletedStatus] = useState(isCompleted);
-  const [value, setValue] = useState(todo);
+  const [data, setData] = useState({
+    todo,
+    isCompleted,
+  });
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleChangeValue = (e) => {
-    setValue(e.target.value);
+    const { value } = e.target;
+    setData((prevData) => ({ ...prevData, todo: value }));
   };
 
   const handleToggleUpdateTodo = () => {
     setIsUpdating((prevStatus) => {
       if (prevStatus) {
-        setValue(todo);
-        setCompletedStatus(isCompleted);
+        setData({ todo, isCompleted });
       }
       return !prevStatus;
     });
@@ -33,8 +35,7 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
   const handleUpdate = async () => {
     const payload = {
       _id,
-      todo: value,
-      isCompleted: completedStatus,
+      ...data,
     };
     if (onUpdate) {
       await onUpdate(payload);
@@ -43,7 +44,10 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
   };
 
   const handleToggleCompletedStatus = () => {
-    setCompletedStatus(!completedStatus);
+    setData((prevData) => ({
+      ...prevData,
+      isCompleted: !prevData.isCompleted,
+    }));
   };
 
   return (
@@ -53,9 +57,9 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
           disabled={!isUpdating}
           type="text"
           name="todo-item"
-          value={value}
+          value={data.todo}
           onChange={handleChangeValue}
-          className={`w-full rounded border border-solid border-gray-300 px-4 py-2 text-sm text-gray-700 ${completedStatus ? 'line-through' : ''}`}
+          className={`w-full rounded border border-solid border-gray-300 px-4 py-2 text-sm text-gray-700 ${data.isCompleted ? 'line-through' : ''}`}
         />
       </div>
       {isUpdating && (
@@ -69,7 +73,7 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
               type="checkbox"
               id={_id}
               name="completed_status"
-              checked={completedStatus}
+              checked={data.isCompleted}
             />
           </div>
           <div className="flex items-center gap-3">
