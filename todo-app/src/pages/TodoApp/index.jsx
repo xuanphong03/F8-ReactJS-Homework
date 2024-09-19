@@ -7,11 +7,15 @@ import todoApi from '~/apis/todoApi';
 import LoadingSpinner from '~/components/LoadingSpinner';
 import { toast } from 'react-toastify';
 import TodoSkeleton from '~/components/TodoSkeleton';
+import { useDebounce } from '~/hooks/useDebounce';
+import { MODE } from '~/constant/modes';
 
 function TodoApp() {
-  const [todoList, setTodoList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [todoList, setTodoList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const debounced = useDebounce(searchTerm, 500);
 
   const getTodoList = async (params) => {
     try {
@@ -27,11 +31,15 @@ function TodoApp() {
     }
   };
 
-  const handleAddNewTodo = async (todo) => {
+  const handleAddNewTodo = async (todo, prevMode) => {
     try {
       setIsLoading(true);
-      await todoApi.create({ todo });
-      getTodoList();
+      const { data } = await todoApi.create({ todo });
+      if (prevMode === MODE.SEARCH) {
+        getTodoList();
+      } else {
+        setTodoList((prevTodoList) => [data, ...prevTodoList]);
+      }
     } catch {
       throw new Error('Failed to add todo');
     } finally {
@@ -44,7 +52,14 @@ function TodoApp() {
       setIsLoading(true);
       const { _id, ...todo } = data;
       await todoApi.update(_id, todo);
-      getTodoList();
+      setTodoList((prevTodoList) => {
+        return prevTodoList.map((todoItem) => {
+          if (todoItem._id === _id) {
+            return { ...todoItem, ...todo };
+          }
+          return todoItem;
+        });
+      });
       toast.success('Cập nhật todo thành công');
     } catch (error) {
       toast.error('Cập nhật todo thất bại');
@@ -58,7 +73,10 @@ function TodoApp() {
     try {
       setIsLoading(true);
       await todoApi.delete(id);
-      getTodoList();
+
+      setTodoList((prevTodoList) => {
+        return prevTodoList.filter(({ _id }) => _id !== id);
+      });
     } catch (error) {
       throw new Error('Fail to delete todo');
     } finally {
@@ -74,6 +92,11 @@ function TodoApp() {
   useEffect(() => {
     getTodoList();
   }, []);
+
+  useEffect(() => {
+    getTodoList({ q: debounced });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounced]);
 
   return (
     <Fragment>
@@ -92,8 +115,11 @@ function TodoApp() {
         </button>
         <div className="xl:4/5 mx-auto w-full p-2 sm:p-4 xl:p-8 2xl:w-3/5">
           <h1 className="text-center">Welcome to Todo App!</h1>
-          <div className="mx-auto w-full px-5 md:w-1/2 md:px-0">
-            <TodoForm onSubmit={handleAddNewTodo} />
+          <div className="mx-auto w-full px-5 md:w-2/3 md:px-0">
+            <TodoForm
+              onSearchTodo={setSearchTerm}
+              onCreateTodo={handleAddNewTodo}
+            />
           </div>
           <div className="mx-auto mt-5 w-full px-5 md:w-4/5 md:px-0">
             {isLoading &&
