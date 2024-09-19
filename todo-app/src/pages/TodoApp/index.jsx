@@ -131,7 +131,7 @@ function TodoApp() {
                 handleDeleteTodo={handleDeleteTodo}
               />
             ) : (
-              [...Array(1)].map((_, index) => <TodoSkeleton key={index} />)
+              [...Array(3)].map((_, index) => <TodoSkeleton key={index} />)
             )}
           </div>
         </div>
