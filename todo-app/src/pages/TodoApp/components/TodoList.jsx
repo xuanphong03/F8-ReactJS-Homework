@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import TodoItem from './TodoItem';
+import TodoItem from '~/components/TodoItem';
 
 TodoList.propTypes = {
   todoList: PropTypes.array,

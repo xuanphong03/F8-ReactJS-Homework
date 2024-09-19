@@ -6,6 +6,7 @@ import { Fragment, useEffect, useState } from 'react';
 import todoApi from '~/apis/todoApi';
 import LoadingSpinner from '~/components/LoadingSpinner';
 import { toast } from 'react-toastify';
+import TodoSkeleton from '~/components/TodoSkeleton';
 
 function TodoApp() {
   const [todoList, setTodoList] = useState([]);
@@ -95,6 +96,9 @@ function TodoApp() {
             <TodoForm onSubmit={handleAddNewTodo} />
           </div>
           <div className="mx-auto mt-5 w-full px-5 md:w-4/5 md:px-0">
+            {isLoading &&
+              todoList.length === 0 &&
+              [...Array(3)].map((_, index) => <TodoSkeleton key={index} />)}
             <TodoList
               todoList={todoList}
               handleUpdateTodo={handleUpdateTodo}
