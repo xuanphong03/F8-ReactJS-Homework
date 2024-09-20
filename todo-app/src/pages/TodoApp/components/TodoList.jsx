@@ -3,6 +3,8 @@ import TodoItem from '~/components/TodoItem';
 
 TodoList.propTypes = {
   todoList: PropTypes.array,
+  handleUpdateTodo: PropTypes.func,
+  handleDeleteTodo: PropTypes.func,
 };
 
 function TodoList({ todoList = [], handleUpdateTodo, handleDeleteTodo }) {

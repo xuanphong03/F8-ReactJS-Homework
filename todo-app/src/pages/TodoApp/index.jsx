@@ -42,7 +42,9 @@ function TodoApp() {
       } else {
         setTodoList((prevTodoList) => [data, ...prevTodoList]);
       }
+      toast.success('Thêm mới todo thành công');
     } catch {
+      toast.error('Thêm mới todo thất bại');
       throw new Error('Failed to add todo');
     } finally {
       setIsLoading(false);
@@ -79,7 +81,9 @@ function TodoApp() {
       setTodoList((prevTodoList) => {
         return prevTodoList.filter(({ _id }) => _id !== id);
       });
+      toast.success('Xóa todo thành công');
     } catch (error) {
+      toast.success('Xóa todo thất bại');
       throw new Error('Fail to delete todo');
     } finally {
       setIsLoading(false);

@@ -1,8 +1,14 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { FaCheck } from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
 TodoItem.propTypes = {
+  _id: PropTypes.string.isRequired,
   todo: PropTypes.string.isRequired,
+  isCompleted: PropTypes.bool.isRequired,
+
+  onUpdate: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
@@ -19,6 +25,7 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
 
   const handleToggleUpdateTodo = () => {
     setIsUpdating((prevStatus) => {
+      // Nếu người dùng bấm hủy thì sẽ reset lại trạng thái todo như ban đầu
       if (prevStatus) {
         setData({ todo, isCompleted });
       }
@@ -59,24 +66,27 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
           name="todo-item"
           value={data.todo}
           onChange={handleChangeValue}
-          className={`w-full rounded border border-solid border-gray-300 px-4 py-2 text-sm text-gray-700 ${data.isCompleted ? 'line-through' : ''}`}
+          className={`w-full rounded border-2 border-solid border-gray-300 px-4 py-2 text-sm text-gray-700 outline-none focus:border-blue-500 ${data.isCompleted ? 'line-through' : ''}`}
         />
       </div>
       {isUpdating && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-gray-700">
-            <label className="leading-none" htmlFor={_id}>
-              Not completed
-            </label>
-            <input
-              onChange={handleToggleCompletedStatus}
-              type="checkbox"
-              id={_id}
-              name="completed_status"
-              checked={data.isCompleted}
-            />
+            <p
+              onClick={handleToggleCompletedStatus}
+              className="cursor-pointer font-semibold leading-none tracking-wide"
+              htmlFor={_id}
+            >
+              {data.isCompleted ? 'Completed' : 'Not completed'}
+            </p>
+            <div
+              onClick={handleToggleCompletedStatus}
+              className={`flex size-5 cursor-pointer items-center justify-center rounded border border-solid text-xs ${data.isCompleted ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-500 bg-white'}`}
+            >
+              {data.isCompleted && <FaCheck />}
+            </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 font-medium">
             <button
               onClick={handleToggleUpdateTodo}
               className="rounded bg-yellow-500 px-5 py-2 hover:bg-opacity-80"
@@ -99,7 +109,7 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
         </div>
       )}
       {!isUpdating && (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 font-medium">
           <button
             onClick={handleToggleUpdateTodo}
             className="rounded bg-green-500 px-5 py-2 hover:bg-opacity-80"
