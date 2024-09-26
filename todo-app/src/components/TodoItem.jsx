@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
+
 import PropTypes from 'prop-types';
 
 TodoItem.propTypes = {
@@ -71,7 +72,7 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
       </div>
       {isUpdating && (
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-gray-700">
+          <div className="flex items-center gap-2 px-2 text-gray-700">
             <p
               onClick={handleToggleCompletedStatus}
               className="cursor-pointer font-semibold leading-none tracking-wide"
@@ -86,22 +87,22 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
               {data.isCompleted && <FaCheck />}
             </div>
           </div>
-          <div className="flex items-center gap-3 font-medium">
+          <div className="flex items-center gap-3 text-sm">
             <button
               onClick={handleToggleUpdateTodo}
-              className="rounded bg-yellow-500 px-5 py-2 hover:bg-opacity-80"
+              className="cursor-pointer rounded bg-yellow-500 px-6 py-2 hover:bg-opacity-80"
             >
               Thoát
             </button>
             <button
               onClick={handleUpdate}
-              className="rounded bg-green-500 px-5 py-2 hover:bg-opacity-80"
+              className="cursor-pointer rounded bg-green-500 px-6 py-2 hover:bg-opacity-80"
             >
               Sửa
             </button>
             <button
               onClick={handleDeleteTodo}
-              className="rounded bg-red-500 px-5 py-2 hover:bg-opacity-80"
+              className="cursor-pointer rounded bg-red-500 px-6 py-2 hover:bg-opacity-80"
             >
               Xóa
             </button>
@@ -109,16 +110,16 @@ function TodoItem({ _id, todo, isCompleted, onUpdate, onDelete }) {
         </div>
       )}
       {!isUpdating && (
-        <div className="flex items-center gap-3 font-medium">
+        <div className="flex items-center gap-3 text-sm">
           <button
             onClick={handleToggleUpdateTodo}
-            className="rounded bg-green-500 px-5 py-2 hover:bg-opacity-80"
+            className="cursor-pointer rounded bg-green-500 px-6 py-2 hover:bg-opacity-80"
           >
             Sửa
           </button>
           <button
             onClick={handleDeleteTodo}
-            className="rounded bg-red-500 px-5 py-2 hover:bg-opacity-80"
+            className="cursor-pointer rounded bg-red-500 px-6 py-2 hover:bg-opacity-80"
           >
             Xóa
           </button>

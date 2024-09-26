@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { MODE } from '~/constant/modes';
+
+import PropTypes from 'prop-types';
 
 TodoForm.propTypes = {
   onCreateTodo: PropTypes.func,
@@ -11,6 +12,7 @@ TodoForm.propTypes = {
 function TodoForm({ onCreateTodo, onSearchTodo }) {
   const [value, setValue] = useState('');
   const [mode, setMode] = useState(MODE.CREATE);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const todoName = e.target.value;
@@ -23,9 +25,16 @@ function TodoForm({ onCreateTodo, onSearchTodo }) {
   const handleCreateTodo = async (e) => {
     e.preventDefault();
     setMode(MODE.CREATE);
-    if (!onCreateTodo || !value) return;
+    // Nếu đang tạo todo thì sẽ prevent sự kiện thêm mới todo
+    // tránh duplicate nhiều todo giống nhau
+    if (!onCreateTodo || isSubmitting) return;
+    if (value.length <= 1) {
+      return toast.warning('Tên todo phải chứa nhiều hơn 1 ký tự');
+    }
+    setIsSubmitting(true);
     await onCreateTodo(value, mode);
     setValue('');
+    setIsSubmitting(false);
   };
 
   const handleChangeToSearchMode = () => {
@@ -33,9 +42,7 @@ function TodoForm({ onCreateTodo, onSearchTodo }) {
       onSearchTodo(value);
     }
     setMode(MODE.SEARCH);
-    if (mode !== MODE.SEARCH) {
-      toast.success('Đã chuyển sang chế độ tìm kiếm');
-    }
+    toast.success('Đã chuyển sang chế độ tìm kiếm');
   };
 
   return (
@@ -56,7 +63,7 @@ function TodoForm({ onCreateTodo, onSearchTodo }) {
         />
         <button
           type="submit"
-          className="rounded-md bg-teal-500 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-teal-700 sm:text-sm"
+          className={`hover:bg-teal-700' cursor-pointer rounded-md bg-teal-500 px-4 py-2 text-xs font-medium text-white transition-colors sm:text-sm`}
         >
           Thêm mới
         </button>

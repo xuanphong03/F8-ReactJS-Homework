@@ -1,13 +1,16 @@
+import { Fragment, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import todoApi from '~/apis/todoApi';
+import { logout } from '../LoginPanel/userSlice';
+import { useDebounce } from '~/hooks/useDebounce';
+
+import TodoSkeleton from '~/components/TodoSkeleton';
 import TodoForm from '~/pages/TodoApp/components/TodoForm';
 import TodoList from '~/pages/TodoApp/components/TodoList';
-import { logout } from '../LoginPanel/userSlice';
-import { Fragment, useEffect, useState } from 'react';
-import todoApi from '~/apis/todoApi';
 import LoadingSpinner from '~/components/LoadingSpinner';
-import { toast } from 'react-toastify';
-import TodoSkeleton from '~/components/TodoSkeleton';
-import { useDebounce } from '~/hooks/useDebounce';
+
 import { MODE } from '~/constant/modes';
 
 function TodoApp() {
@@ -18,8 +21,12 @@ function TodoApp() {
   const [fetchTodoListStatus, setFetchTodoListStatus] = useState(false);
   const debounced = useDebounce(searchTerm, 500);
 
-  const getTodoList = async (params) => {
+  const getTodoList = async (searchTerm) => {
     try {
+      const params = {};
+      if (searchTerm) {
+        params.q = searchTerm;
+      }
       setIsLoading(true);
       const {
         data: { listTodo },
@@ -33,7 +40,7 @@ function TodoApp() {
     }
   };
 
-  const handleAddNewTodo = async (todo, prevMode) => {
+  const handleCreateTodo = async (todo, prevMode) => {
     try {
       setIsLoading(true);
       const { data } = await todoApi.create({ todo });
@@ -77,7 +84,6 @@ function TodoApp() {
     try {
       setIsLoading(true);
       await todoApi.delete(id);
-
       setTodoList((prevTodoList) => {
         return prevTodoList.filter(({ _id }) => _id !== id);
       });
@@ -95,12 +101,12 @@ function TodoApp() {
     dispatch(action);
   };
 
-  useEffect(() => {
-    getTodoList();
-  }, []);
+  // useEffect(() => {
+  //   getTodoList();
+  // }, []);
 
   useEffect(() => {
-    getTodoList({ q: debounced });
+    getTodoList(debounced);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounced]);
 
@@ -108,10 +114,11 @@ function TodoApp() {
     <Fragment>
       {isLoading && (
         <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-gray-700 bg-opacity-20"></div>
+          <div className="absolute inset-0 bg-white bg-opacity-50"></div>
           <LoadingSpinner />
         </div>
       )}
+
       <div className="min-h-screen w-full bg-slate-700 text-white">
         <button
           onClick={handleLogout}
@@ -119,12 +126,12 @@ function TodoApp() {
         >
           Đăng xuất
         </button>
-        <div className="xl:4/5 mx-auto w-full p-2 sm:p-4 xl:p-8 2xl:w-3/5">
+        <div className="mx-auto w-full p-2 sm:p-4 xl:w-4/5 xl:p-8 2xl:w-3/5">
           <h1 className="text-center">Welcome to Todo App!</h1>
           <div className="mx-auto w-full px-5 md:w-2/3 md:px-0">
             <TodoForm
               onSearchTodo={setSearchTerm}
-              onCreateTodo={handleAddNewTodo}
+              onCreateTodo={handleCreateTodo}
             />
           </div>
           <div className="mx-auto mt-5 w-full px-5 md:w-4/5 md:px-0">
