@@ -5,6 +5,7 @@ import orderApi from "~/apis/orderApi";
 import { AppContext } from "~/App";
 import { toast } from "react-toastify";
 import LoadingSpinner from "~/components/animations/LoadingSpinner";
+import EmptyCart from "~/assets/images/empty_cart.png";
 
 function CartPage() {
   const {
@@ -96,10 +97,7 @@ function CartPage() {
         </table>
         {!cart.length && (
           <div className="flex items-center justify-center">
-            <img
-              alt="empty image"
-              src="https://www.99fashionbrands.com/wp-content/uploads/2020/12/empty_cart.png"
-            />
+            <img alt="empty image" src={EmptyCart} />
           </div>
         )}
       </div>
