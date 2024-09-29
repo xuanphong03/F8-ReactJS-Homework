@@ -16,6 +16,7 @@ function ShopPage() {
     limit: 12,
     total: 0,
   });
+
   const queryParams = useMemo(() => {
     const params = queryString.parse(location.search);
     return {
@@ -76,7 +77,10 @@ function ShopPage() {
           {!loading &&
             products.map((product) => {
               return (
-                <article key={uuidv4()} className="col-span-3">
+                <article
+                  key={uuidv4()}
+                  className=" 2xl:col-span-3 md:col-span-4 col-span-12"
+                >
                   <ProductItem product={product} />
                 </article>
               );

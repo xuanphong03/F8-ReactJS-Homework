@@ -34,7 +34,9 @@ function ProductItem({ product }) {
         />
       </div>
       <div className="mt-2 flex flex-col gap-2">
-        <h4 className="text-xl font-medium">{product.name}</h4>
+        <h4 className="2xl:text-xl xl:text-lg text-base font-medium">
+          {product.name}
+        </h4>
         <p className="font-bold text-lg text-red-400">
           {product.price.toLocaleString("en-US", {
             style: "currency",

@@ -27,6 +27,9 @@ export default {
         // => @media (min-width: 1320px) { ... }
       },
     },
+    zIndex: {
+      max: 99999,
+    },
   },
   plugins: [],
 };
