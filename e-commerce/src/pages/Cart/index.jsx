@@ -9,7 +9,7 @@ import EmptyCart from "~/assets/images/empty_cart.png";
 
 function CartPage() {
   const {
-    state: { cart, totalQuantity },
+    state: { items, totalQuantity },
     dispatch,
   } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ function CartPage() {
   const handlePayment = async () => {
     try {
       setLoading(true);
-      const response = await orderApi.create(cart);
+      const response = await orderApi.create(items);
       if (response.code === 200) {
         dispatch({ type: "cart/payment" });
         toast.success("Thanh toán thành công");
@@ -64,7 +64,7 @@ function CartPage() {
             </tr>
           </thead>
           <tbody>
-            {cart.map(({ id, name, left, quantity, price }) => (
+            {items.map(({ id, name, left, quantity, price }) => (
               <tr
                 key={uuidv4()}
                 className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
@@ -95,7 +95,7 @@ function CartPage() {
             ))}
           </tbody>
         </table>
-        {!cart.length && (
+        {!items.length && (
           <div className="flex items-center justify-center">
             <img alt="empty image" src={EmptyCart} />
           </div>

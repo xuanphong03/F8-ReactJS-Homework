@@ -1,9 +1,10 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { StorageKeys } from "~/constants/storage-key";
+import { deleteCookie, getCookie } from "~/utils/cookie";
 
 const axiosClient = axios.create({
-  baseURL: "https://api-exercise-sopi.vercel.app/api/v1",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,8 +14,8 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    if (sessionStorage.getItem(StorageKeys.ACCESS_TOKEN)) {
-      const apiKey = sessionStorage.getItem(StorageKeys.ACCESS_TOKEN);
+    const apiKey = getCookie(StorageKeys.ACCESS_TOKEN);
+    if (apiKey) {
       config.headers["X-Api-Key"] = apiKey;
     }
     return config;
@@ -45,7 +46,7 @@ axiosClient.interceptors.response.use(
       toast.error(message);
     } else if (status === 401) {
       // Hết hạn token
-      sessionStorage.removeItem(StorageKeys.ACCESS_TOKEN);
+      deleteCookie(StorageKeys.ACCESS_TOKEN);
       sessionStorage.removeItem(StorageKeys.USER);
       if (window.confirm("Đã có lỗi xảy ra. Vui lòng tải lại trang")) {
         location.reload();

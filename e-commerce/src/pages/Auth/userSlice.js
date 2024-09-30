@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import userApi from "~/apis/userApi";
 import { StorageKeys } from "~/constants/storage-key";
+import { deleteCookie, setCookie } from "~/utils/cookie";
 
 // First, create the thunk
 export const login = createAsyncThunk("user/login", async (payload) => {
@@ -12,7 +13,7 @@ export const login = createAsyncThunk("user/login", async (payload) => {
     } = data;
     toast.success("Đăng nhập thành công");
     // save data to session storage
-    sessionStorage.setItem(StorageKeys.ACCESS_TOKEN, apiKey);
+    setCookie(StorageKeys.ACCESS_TOKEN, apiKey, 1);
     sessionStorage.setItem(StorageKeys.USER, JSON.stringify(payload));
     return {
       data: payload,
@@ -31,7 +32,7 @@ const userSlice = createSlice({
     logout(state) {
       // clear session storage
       state.data = {};
-      sessionStorage.clear(StorageKeys.ACCESS_TOKEN);
+      deleteCookie(StorageKeys.ACCESS_TOKEN);
       sessionStorage.clear(StorageKeys.USER_EMAIL);
     },
   },

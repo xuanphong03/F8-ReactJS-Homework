@@ -11,13 +11,15 @@ import DefaultLayout from "./layouts/DefaultLayout";
 import { createContext, useReducer } from "react";
 import { reducer } from "./utils/reducer";
 import ErrorPage from "./pages/Error";
+import { StorageKeys } from "./constants/storage-key";
 
 export const AppContext = createContext();
-const initialState = {
-  cart: [],
-  totalQuantity: 0,
-};
+
 function App() {
+  const initialState = JSON.parse(localStorage.getItem(StorageKeys.CART)) || {
+    items: [],
+    totalQuantity: 0,
+  };
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const { email } = useSelector((state) => state.user.data);
