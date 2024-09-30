@@ -1,10 +1,11 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API } from "~/constants/api";
 import { StorageKeys } from "~/constants/storage-key";
 import { deleteCookie, getCookie } from "~/utils/cookie";
 
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: API.BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
