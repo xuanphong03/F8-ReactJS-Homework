@@ -7,12 +7,12 @@ import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 
 function App() {
-  const { isAuthenticated, isLoading, error } = useAuth0();
+  const { isAuthenticated, isLoading } = useAuth0();
 
   return (
     <Fragment>
       {isLoading && <LoadingSpinner />}
-      {!isLoading && !error && (
+      {!isLoading && (
         <main className="flex justify-center items-center min-h-screen">
           {isAuthenticated ? <Home /> : <Auth />}
           <ToastContainer autoClose={2000} closeOnClick={true} />
