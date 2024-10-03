@@ -13,8 +13,10 @@ function Home() {
   const emailjsPublicKey = import.meta.env.VITE_APP_EMAILJS_USER_ID;
 
   const { logout, user } = useAuth0();
+
   const [form, setForm] = useState({
     name: user.name,
+    email: user.email || "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef();
@@ -64,6 +66,7 @@ function Home() {
             />
           </div>
           <h1>Have a nice day {user.name}</h1>
+          <h2>Email: {user.email}</h2>
           <div className="mt-5">
             <SendEmailForm />
           </div>
