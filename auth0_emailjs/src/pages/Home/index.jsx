@@ -66,7 +66,7 @@ function Home() {
             />
           </div>
           <h1>Have a nice day {user.name}</h1>
-          <h2>Email: {user.email}</h2>
+          {user.name && <h2>Email: {user.email}</h2>}
           <div className="mt-5">
             <SendEmailForm />
           </div>
