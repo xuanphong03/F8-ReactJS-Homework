@@ -76,6 +76,11 @@ export const trelloSlice = createSlice({
       const newTasks = state.tasks.filter((task) => task._id !== id);
       state.tasks = newTasks;
     },
+    deleteColumn(state, action) {
+      const columnId = action.payload;
+      const newColumns = state.columns.filter((col) => col.column !== columnId);
+      state.columns = newColumns;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getTasksMiddleware.fulfilled, (state, action) => {
@@ -119,6 +124,7 @@ export const trelloSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addColumn, addTask, deleteTask } = trelloSlice.actions;
+export const { addColumn, addTask, deleteTask, deleteColumn } =
+  trelloSlice.actions;
 
 export default trelloSlice.reducer;

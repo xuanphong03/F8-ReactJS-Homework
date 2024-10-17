@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import {
   addTask,
+  deleteColumn,
   deleteTaskMiddleware,
   postTaskMiddleware,
 } from "../../../../stores/slices/trelloSlice";
@@ -60,6 +61,7 @@ function ColumnItem({ column }) {
     try {
       const newColumns = columns.filter((col) => col.column !== column.column);
       const payload = getTemplateFormPostTasks(tasks, newColumns);
+      dispatch(deleteColumn(column.column));
       dispatch(deleteTaskMiddleware(payload));
     } catch (error) {
       throw new Error("Failed to delete column");

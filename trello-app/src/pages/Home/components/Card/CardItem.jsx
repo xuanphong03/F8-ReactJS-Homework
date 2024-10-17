@@ -1,13 +1,13 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import PropTypes from "prop-types";
 import { MdDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { getTemplateFormPostTasks } from "../../../../utils/getTemplateFormPayloadPostTasks";
-import PropTypes from "prop-types";
 import {
   deleteTask,
   deleteTaskMiddleware,
 } from "../../../../stores/slices/trelloSlice";
+import { getTemplateFormPostTasks } from "../../../../utils/getTemplateFormPayloadPostTasks";
 
 CardItem.propTypes = {
   card: PropTypes.object,

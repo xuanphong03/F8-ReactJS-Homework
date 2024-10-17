@@ -3,6 +3,9 @@ import {
   defaultDropAnimationSideEffects,
   DndContext,
   DragOverlay,
+  MouseSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +18,6 @@ import { cloneDeep } from "lodash";
 import { getTemplateFormPostTasks } from "../../utils/getTemplateFormPayloadPostTasks";
 import {
   getTasksMiddleware,
-  postTaskMiddleware,
   updateTaskMiddleware,
 } from "../../stores/slices/trelloSlice";
 import { REQUEST_STATUS } from "../../constants/request-status";
@@ -40,6 +42,11 @@ function Home() {
   const [activeDragItemData, setActiveDragItemData] = useState(null);
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] =
     useState(null);
+
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: { distance: 10 },
+  });
+  const sensors = useSensors(mouseSensor);
 
   // Đồng bộ dữ liệu khi di chuyển cột hoặc task
   const handleDataSynchronization = (nextColumns) => {
@@ -344,6 +351,7 @@ function Home() {
       )}
       <DndContext
         collisionDetection={closestCorners}
+        sensors={sensors}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
