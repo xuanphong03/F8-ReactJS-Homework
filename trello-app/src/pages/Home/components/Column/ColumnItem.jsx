@@ -5,7 +5,13 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useDispatch, useSelector } from "react-redux";
-import { postTask } from "../../../../stores/slices/trelloSlice";
+import { v4 as uuidv4 } from "uuid";
+import {
+  addTask,
+  deleteTaskMiddleware,
+  postTaskMiddleware,
+} from "../../../../stores/slices/trelloSlice";
+import { getTemplateFormPostTasks } from "../../../../utils/getTemplateFormPayloadPostTasks";
 
 ColumnItem.propTypes = {
   column: PropTypes.object,
@@ -34,26 +40,29 @@ function ColumnItem({ column }) {
 
   const handleAddTask = () => {
     try {
-      const payload = [];
-      tasks.forEach((task) => {
-        const col = columns.find((col) => col.column === task.column);
-        if (col) {
-          payload.push({
-            content: task.content,
-            column: col.column,
-            columnName: col.columnName,
-          });
-        }
-      });
+      const payload = getTemplateFormPostTasks(tasks, columns);
       const newTask = {
         column: column.column,
         columnName: column.columnName,
-        content: "Task mới",
+        content: `Công việc ${tasks.length + 1}`,
       };
       payload.push(newTask);
-      dispatch(postTask(payload));
+      dispatch(addTask({ _id: uuidv4(), ...newTask }));
+      dispatch(postTaskMiddleware(payload));
     } catch (error) {
       throw new Error("Failed to add new task");
+    }
+  };
+
+  const handleDeleteColumn = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const newColumns = columns.filter((col) => col.column !== column.column);
+      const payload = getTemplateFormPostTasks(tasks, newColumns);
+      dispatch(deleteTaskMiddleware(payload));
+    } catch (error) {
+      throw new Error("Failed to delete column");
     }
   };
 
@@ -62,14 +71,16 @@ function ColumnItem({ column }) {
       ref={setNodeRef}
       style={dndKitColumnStyles}
       {...attributes}
-      className="flex flex-col shrink-0 bg-white w-[350px] h-125 rounded overflow-hidden shadow-xl"
+      className="shrink-0 flex flex-col bg-white w-[350px] h-125 rounded overflow-hidden shadow-xl"
     >
-      <div
-        {...listeners}
-        className="cursor-grab bg-gray-200 font-medium p-2 flex items-center justify-between"
-      >
-        <h3>{column?.columnName}</h3>
-        <button className=" rounded-full hover:bg-white">
+      <div className=" bg-gray-200 h-10 font-medium flex items-center justify-between">
+        <h3 {...listeners} className="cursor-grab flex-1 p-2">
+          {column?.columnName}
+        </h3>
+        <button
+          onClick={handleDeleteColumn}
+          className="flex items-center justify-center size-6 rounded-full hover:bg-white mr-2"
+        >
           <AiOutlineDelete className="text-xl" />
         </button>
       </div>

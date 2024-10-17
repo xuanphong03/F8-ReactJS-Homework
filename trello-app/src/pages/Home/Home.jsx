@@ -5,16 +5,20 @@ import {
   DragOverlay,
 } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
-import { MdPostAdd } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
-import { addColumn, getTasks } from "../../stores/slices/trelloSlice";
 import ColumnList from "./components/Column/ColumnList";
 import { groupTasksByColumn } from "../../utils/groupTasksByColumn";
 import { arrayMove } from "@dnd-kit/sortable";
 import ColumnItem from "./components/Column/ColumnItem";
 import CardItem from "./components/Card/CardItem";
 import { cloneDeep } from "lodash";
+import { getTemplateFormPostTasks } from "../../utils/getTemplateFormPayloadPostTasks";
+import {
+  getTasksMiddleware,
+  postTaskMiddleware,
+  updateTaskMiddleware,
+} from "../../stores/slices/trelloSlice";
+import { REQUEST_STATUS } from "../../constants/request-status";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: "ACTIVE_DRAG_ITEM_TYPE_CARD",
@@ -23,7 +27,11 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 function Home() {
   const dispatch = useDispatch();
-  const { columns, tasks } = useSelector((state) => state.trello);
+  const {
+    columns,
+    tasks,
+    status: dataSynchronizationStatus,
+  } = useSelector((state) => state.trello);
   const [orderedColumns, setOrderedColumns] = useState([]);
 
   // Cùng một thời điểm chỉ có một thời phần tử đang được kéo (column hoặc card)
@@ -32,6 +40,15 @@ function Home() {
   const [activeDragItemData, setActiveDragItemData] = useState(null);
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] =
     useState(null);
+
+  // Đồng bộ dữ liệu khi di chuyển cột hoặc task
+  const handleDataSynchronization = (nextColumns) => {
+    const newTasks = nextColumns.reduce((result, { tasks }) => {
+      return [...result, ...tasks];
+    }, []);
+    const payloadPostTask = getTemplateFormPostTasks(newTasks, columns);
+    dispatch(updateTaskMiddleware(payloadPostTask));
+  };
 
   // Tìm một cái Column theo cardId
   const findColumnByCardId = (cardId) => {
@@ -48,7 +65,8 @@ function Home() {
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
+    activeDraggingCardData,
+    dataSynchronizationStatus = false
   ) => {
     setOrderedColumns((prevColumns) => {
       // Tìm vị trí (index) của cái overCard trong column đích (nơi mà activeCard sắp được thả)
@@ -104,6 +122,11 @@ function Home() {
         );
       }
 
+      if (dataSynchronizationStatus) {
+        console.log("Fetch data");
+        handleDataSynchronization(nextColumns);
+      }
+
       return nextColumns;
     });
   };
@@ -137,7 +160,6 @@ function Home() {
     // Không làm gì thêm nếu như kéo column vì đã xử lý kéo column ở handleDragEnd
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return;
     // Xử lý kéo card qua lại giữa các column
-    // console.log("handleDragOver", event);
     const { active, over } = event;
 
     // Nếu không tồn tại active hoặc over (Kéo linh tinh ra ngoài) thì sẽ không làm gì cả
@@ -233,6 +255,7 @@ function Home() {
       if (!activeColumn || !overColumn) return;
 
       if (oldColumnWhenDraggingCard.column !== overColumn.column) {
+        const dataSynchronizationStatus = true;
         moveCardBetweenDifferentColumns(
           overColumn,
           overCardId,
@@ -240,8 +263,10 @@ function Home() {
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData
+          activeDraggingCardData,
+          dataSynchronizationStatus
         );
+        console.log("Call api đổi vị trí giữa 2 cột khác nhau ở đây!");
       } else {
         // Cập nhật lại state columns ban đầu sau khi kéo thả
         const oldCardIndex = oldColumnWhenDraggingCard?.tasks?.findIndex(
@@ -255,16 +280,19 @@ function Home() {
           oldCardIndex,
           newCardIndex
         );
-        setOrderedColumns((prevOrderedColumns) => {
-          const nextColumn = cloneDeep(prevOrderedColumns);
-          // Tìm tới column mà đang drop
-          const targetColumn = nextColumn.find(
-            (column) => column.column === overColumn.column
-          );
-          targetColumn.tasks = dndOrderedCards;
 
-          return nextColumn;
-        });
+        const nextColumns = cloneDeep(orderedColumns);
+        // Tìm tới column mà đang drop
+        const targetColumn = nextColumns.find(
+          (column) => column.column === overColumn.column
+        );
+        targetColumn.tasks = dndOrderedCards;
+        setOrderedColumns(nextColumns);
+
+        // Call api cập nhật lại vị trí
+        if (newCardIndex !== oldCardIndex) {
+          handleDataSynchronization(nextColumns);
+        }
       }
     }
 
@@ -273,17 +301,22 @@ function Home() {
       activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN &&
       active.id !== over.id
     ) {
+      // Lấy vị trí cũ (từ active) và lấy vị trí mới (từ over)
+      const oldColumnIndex = orderedColumns.findIndex(
+        (c) => c.column === active.id
+      );
+      const newColumnIndex = orderedColumns.findIndex(
+        (c) => c.column === over.id
+      );
+      const nextColumns = arrayMove(
+        orderedColumns,
+        oldColumnIndex,
+        newColumnIndex
+      );
       // Cập nhật lại state columns ban đầu sau khi kéo thả
-      setOrderedColumns((prevOrderedColumns) => {
-        // Lấy vị trí cũ (từ active) và lấy vị trí mới (từ over)
-        const oldColumnIndex = prevOrderedColumns.findIndex(
-          (c) => c.column === active.id
-        );
-        const newColumnIndex = prevOrderedColumns.findIndex(
-          (c) => c.column === over.id
-        );
-        return arrayMove(prevOrderedColumns, oldColumnIndex, newColumnIndex);
-      });
+      setOrderedColumns(nextColumns);
+      // Call api cập nhật lại vị trí
+      handleDataSynchronization(nextColumns);
     }
 
     // Sau khi kéo thả đưa về giá trị null mặc định ban đầu
@@ -293,25 +326,22 @@ function Home() {
     setOldColumnWhenDraggingCard(null);
   };
 
-  const handleAddColumn = () => {
-    const payload = {
-      id: uuidv4(),
-      column: uuidv4(),
-      columnName: "Cột mới",
-    };
-    dispatch(addColumn(payload));
-  };
-
   useEffect(() => {
-    dispatch(getTasks());
+    dispatch(getTasksMiddleware());
   }, [dispatch]);
 
   useEffect(() => {
-    setOrderedColumns(groupTasksByColumn(tasks, columns));
+    const newOrderedColumns = groupTasksByColumn(tasks, columns);
+    setOrderedColumns(newOrderedColumns);
   }, [columns, tasks]);
 
   return (
-    <div className="h-screen bg-blue-400 flex items-center justify-center overflow-x-auto">
+    <div className="flex items-center  gap-10 px-10">
+      {dataSynchronizationStatus === REQUEST_STATUS.PENDING && (
+        <p className="absolute top-4 left-1/2 -translate-x-1/2">
+          Đang thực hiện đồng bộ dữ liệu...
+        </p>
+      )}
       <DndContext
         collisionDetection={closestCorners}
         onDragStart={handleDragStart}
@@ -332,14 +362,6 @@ function Home() {
             )}
         </DragOverlay>
       </DndContext>
-      <div className="shrink-0 h-125 ml-10 w-80">
-        <button
-          onClick={handleAddColumn}
-          className="flex items-center justify-center gap-2 w-full rounded px-3 py-2 bg-blue-200 bg-opacity-80 hover:bg-opacity-50 transition-opacity"
-        >
-          <MdPostAdd className="text-xl" /> Thêm cột
-        </button>
-      </div>
     </div>
   );
 }

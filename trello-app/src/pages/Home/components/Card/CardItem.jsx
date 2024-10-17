@@ -1,13 +1,21 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import PropTypes from "prop-types";
 import { MdDeleteOutline } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { getTemplateFormPostTasks } from "../../../../utils/getTemplateFormPayloadPostTasks";
+import PropTypes from "prop-types";
+import {
+  deleteTask,
+  deleteTaskMiddleware,
+} from "../../../../stores/slices/trelloSlice";
 
 CardItem.propTypes = {
   card: PropTypes.object,
 };
 
 function CardItem({ card }) {
+  const dispatch = useDispatch();
+  const { tasks, columns } = useSelector((state) => state.trello);
   const {
     attributes,
     listeners,
@@ -26,8 +34,18 @@ function CardItem({ card }) {
     opacity: isDragging ? 0.5 : undefined,
   };
 
-  const handleRemoveTask = () => {
-    console.log("Xóa");
+  const handleDeleteTask = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      const newTasks = tasks?.filter((task) => task._id !== card._id);
+      const payload = getTemplateFormPostTasks(newTasks, columns);
+      dispatch(deleteTask(card._id));
+      dispatch(deleteTaskMiddleware(payload));
+    } catch (error) {
+      throw new Error("Failed to delete task");
+    }
   };
 
   return (
@@ -38,13 +56,13 @@ function CardItem({ card }) {
       className="bg-blue-500 rounded text-white cursor-grab"
     >
       <div className="flex justify-between">
-        <h4 {...listeners} className="flex-1 px-3 py-2">
+        <h3 {...listeners} className="flex-1 px-3 py-2">
           {card?.content}
-        </h4>
+        </h3>
         <div className="flex items-center justify-center size-10">
           <button
-            onClick={handleRemoveTask}
-            className=" hover:bg-white hover:text-black rounded-full transition-all"
+            onClick={handleDeleteTask}
+            className="hover:bg-white size-7 flex items-center justify-center hover:text-black rounded-full transition-all"
           >
             <MdDeleteOutline className="text-xl" />
           </button>

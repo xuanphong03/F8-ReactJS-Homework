@@ -15,7 +15,7 @@ function ColumnList({ columns }) {
       items={columns?.map((col) => col.column)}
       strategy={horizontalListSortingStrategy}
     >
-      <div className="flex gap-10 items-center">
+      <div className="shrink-0 flex gap-10 items-center">
         {columns?.map((col) => (
           <ColumnItem key={col.column} column={col} />
         ))}
