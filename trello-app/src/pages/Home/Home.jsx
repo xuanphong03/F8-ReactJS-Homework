@@ -261,7 +261,45 @@ function Home() {
       const overColumn = findColumnByCardId(overCardId);
 
       // Nếu không tồn tại 1 trong 2 column thì không làm gì hết
-      if (!activeColumn || !overColumn) return;
+      if (!activeColumn || !overColumn) {
+        const { id: overColumnId } = over;
+        setOrderedColumns((prevColumns) => {
+          const overColumn = prevColumns.find((c) => c.column === overColumnId);
+          const newCardIndex = overColumn.tasks.length;
+
+          const nextColumns = cloneDeep(prevColumns);
+          const nextActiveColumn = nextColumns.find(
+            (c) => c.column === activeColumn.column
+          );
+          const nextOverColumn = nextColumns.find(
+            (c) => c.column === overColumn.column
+          );
+          // Column cũ
+          if (nextActiveColumn) {
+            // Xóa card ở cái column active (column cũ, cái lúc mà kéo card sang column khác)
+            nextActiveColumn.tasks = nextActiveColumn.tasks.filter(
+              (task) => task._id !== activeDraggingCardId
+            );
+          }
+          if (nextOverColumn) {
+            // Kiểm tra xem card đang kéo nó có tồn tại ở overColumn chưa? Nếu có thì cần xóa nó trước
+            nextOverColumn.tasks = nextOverColumn.tasks.filter(
+              (task) => task._id !== activeDraggingCardId
+            );
+            // Thêm cái card đang kéo vào over column theo index mới
+            nextOverColumn.tasks = nextOverColumn.tasks.toSpliced(
+              newCardIndex,
+              0,
+              activeDraggingCardData
+            );
+          }
+          console.log("nextColumns", nextColumns);
+
+          handleDataSynchronization(nextColumns);
+          return nextColumns;
+        });
+        return;
+      }
 
       if (oldColumnWhenDraggingCard.column !== overColumn.column) {
         const dataSynchronizationStatus = true;
@@ -275,7 +313,6 @@ function Home() {
           activeDraggingCardData,
           dataSynchronizationStatus
         );
-        console.log("Call api đổi vị trí giữa 2 cột khác nhau ở đây!");
       } else {
         // Cập nhật lại state columns ban đầu sau khi kéo thả
         const oldCardIndex = oldColumnWhenDraggingCard?.tasks?.findIndex(
@@ -335,42 +372,6 @@ function Home() {
     setOldColumnWhenDraggingCard(null);
   };
 
-  // Custom lại thuật toán phát hiện va chạm tối ưu cho việc kéo thả
-  const collisionDetectionStrategy = useCallback(
-    (args) => {
-      if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
-        return closestCorners({ ...args });
-      }
-      // First, let's see if there are any collisions with the pointer
-      const pointerIntersection = pointerWithin(args);
-
-      if (!pointerIntersection?.length) return;
-
-      let overId = getFirstCollision(pointerIntersection, "id");
-      if (overId) {
-        const checkColumn = orderedColumns.find((col) => col.column === overId);
-        if (checkColumn) {
-          const orderedColumnIds = checkColumn?.tasks?.map((c) => c._id);
-          overId = closestCorners({
-            ...args,
-            droppableContainers: args.droppableContainers.filter(
-              (container) =>
-                container.id !== overId &&
-                orderedColumnIds?.includes(container.id)
-            )[0]?.id,
-          });
-          if (!overId.length) {
-            overId = orderedColumnIds[orderedColumnIds.length - 1];
-          }
-        }
-        lastOverId.current = overId;
-        return [{ id: overId }];
-      }
-      return lastOverId.current ? [{ id: lastOverId.current }] : [];
-    },
-    [activeDragItemType, orderedColumns]
-  );
-
   useEffect(() => {
     dispatch(getTasksMiddleware());
   }, [dispatch]);
@@ -388,8 +389,6 @@ function Home() {
         </p>
       )}
       <DndContext
-        // collisionDetection={closestCorners}
-        collisionDetection={collisionDetectionStrategy}
         sensors={sensors}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}

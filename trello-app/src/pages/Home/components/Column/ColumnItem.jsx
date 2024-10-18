@@ -11,8 +11,12 @@ import {
   deleteColumn,
   deleteTaskMiddleware,
   postTaskMiddleware,
+  updateColumnName,
+  updateTaskMiddleware,
 } from "../../../../stores/slices/trelloSlice";
 import { getTemplateFormPostTasks } from "../../../../utils/getTemplateFormPayloadPostTasks";
+import { useState } from "react";
+import EdiText from "react-editext";
 
 ColumnItem.propTypes = {
   column: PropTypes.object,
@@ -21,6 +25,7 @@ ColumnItem.propTypes = {
 function ColumnItem({ column }) {
   const dispatch = useDispatch();
   const { tasks, columns } = useSelector((state) => state.trello);
+  const [columnName, setColumnName] = useState(column?.columnName);
   const {
     attributes,
     listeners,
@@ -68,17 +73,31 @@ function ColumnItem({ column }) {
     }
   };
 
+  const handleReColumName = (name) => {
+    setColumnName(name);
+    const payload = getTemplateFormPostTasks(tasks, columns)?.map((task) =>
+      task.column === column.column ? { ...task, columnName: name } : task
+    );
+    dispatch(updateColumnName({ columnId: column.column, columnName: name }));
+    dispatch(updateTaskMiddleware(payload));
+  };
+
   return (
     <div
       ref={setNodeRef}
       style={dndKitColumnStyles}
       {...attributes}
+      {...listeners}
       className="shrink-0 flex flex-col bg-white w-[350px] h-125 rounded overflow-hidden shadow-xl"
     >
-      <div className=" bg-gray-200 h-10 font-medium flex items-center justify-between">
-        <h3 {...listeners} className="cursor-grab flex-1 p-2">
-          {column?.columnName}
-        </h3>
+      <div className=" bg-gray-200 font-medium flex items-center justify-between">
+        <EdiText
+          {...listeners}
+          type="text"
+          value={columnName}
+          className="cursor-grab flex-1 p-2"
+          onSave={handleReColumName}
+        ></EdiText>
         <button
           onClick={handleDeleteColumn}
           className="flex items-center justify-center size-6 rounded-full hover:bg-white mr-2"
