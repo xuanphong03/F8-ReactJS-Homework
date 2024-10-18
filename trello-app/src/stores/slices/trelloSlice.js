@@ -125,7 +125,7 @@ export const trelloSlice = createSlice({
     });
     builder.addCase(updateTaskMiddleware.fulfilled, (state, action) => {
       const { tasks, columns } = action.payload;
-      state.tasks = tasks;
+      // state.tasks = tasks;
       localStorage.setItem(storageKeys.TASKS, JSON.stringify(tasks));
       localStorage.setItem(storageKeys.COLUMNS, JSON.stringify(columns));
       state.status = REQUEST_STATUS.IDLE;
