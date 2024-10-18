@@ -71,9 +71,9 @@ export const trelloSlice = createSlice({
       state.tasks.push(newTask);
     },
     deleteTask(state, action) {
-      const id = action.payload;
-      const newTasks = state.tasks.filter((task) => task._id !== id);
-      state.tasks = newTasks;
+      // const id = action.payload;
+      // const newTasks = state.tasks.filter((task) => task._id !== id);
+      // state.tasks = newTasks;
     },
     deleteColumn(state, action) {
       const columnId = action.payload;
