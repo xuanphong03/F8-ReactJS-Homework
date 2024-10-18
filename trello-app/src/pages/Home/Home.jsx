@@ -359,9 +359,10 @@ function Home() {
                 orderedColumnIds?.includes(container.id)
             )[0]?.id,
           });
-          overId = orderedColumnIds[orderedColumnIds.length - 1];
+          if (!overId.length) {
+            overId = orderedColumnIds[orderedColumnIds.length - 1];
+          }
         }
-
         lastOverId.current = overId;
         return [{ id: overId }];
       }
