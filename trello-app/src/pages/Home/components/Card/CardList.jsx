@@ -10,12 +10,14 @@ CardList.propTypes = {
 };
 
 function CardList({ cards }) {
+  const dndContextItems = cards?.map((c) => c._id);
+
   return (
     <SortableContext
-      items={cards?.map((c) => c._id)}
+      items={dndContextItems}
       strategy={verticalListSortingStrategy}
     >
-      <div className="flex flex-col gap-4 h-full">
+      <div className="flex flex-col gap-4 h-full overflow-y-auto">
         {cards?.map((card) => (
           <CardItem key={card?._id} card={card} />
         ))}

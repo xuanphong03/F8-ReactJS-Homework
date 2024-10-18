@@ -74,6 +74,7 @@ function ColumnItem({ column }) {
   };
 
   const handleReColumName = (name) => {
+    if (columnName === name || !name) return;
     setColumnName(name);
     const payload = getTemplateFormPostTasks(tasks, columns)?.map((task) =>
       task.column === column.column ? { ...task, columnName: name } : task
@@ -88,14 +89,13 @@ function ColumnItem({ column }) {
       style={dndKitColumnStyles}
       {...attributes}
       {...listeners}
-      className="shrink-0 flex flex-col bg-white w-[350px] h-125 rounded overflow-hidden shadow-xl"
+      className="shrink-0 flex flex-col bg-white w-[350px] h-125 rounded overflow-hidden shadow-xl cursor-grab"
     >
       <div className=" bg-gray-200 font-medium flex items-center justify-between">
         <EdiText
-          {...listeners}
           type="text"
           value={columnName}
-          className="cursor-grab flex-1 p-2"
+          className="flex-1 p-2"
           onSave={handleReColumName}
         ></EdiText>
         <button

@@ -293,7 +293,6 @@ function Home() {
               activeDraggingCardData
             );
           }
-          console.log("nextColumns", nextColumns);
 
           handleDataSynchronization(nextColumns);
           return nextColumns;

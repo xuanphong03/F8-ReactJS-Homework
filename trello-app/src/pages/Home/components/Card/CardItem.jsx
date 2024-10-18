@@ -54,6 +54,7 @@ function CardItem({ card }) {
   };
 
   const handleUpdateTaskContent = (content) => {
+    if (content === taskContent || !content) return;
     setTaskContent(content);
     const payload = getTemplateFormPostTasks(tasks, columns);
     const targetTask = payload.find((t) => t.column === card.column);
@@ -68,7 +69,7 @@ function CardItem({ card }) {
       style={dndKitCardStyles}
       {...attributes}
       {...listeners}
-      className="bg-blue-500 rounded text-white cursor-grab border-2 border-solid border-black overflow-hidden"
+      className="shrink-0 bg-blue-500 rounded text-white cursor-grab border-2 border-solid border-black overflow-hidden"
     >
       <div className="flex justify-between bg-blue-400">
         <EdiText
