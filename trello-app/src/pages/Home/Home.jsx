@@ -3,11 +3,13 @@ import {
   defaultDropAnimationSideEffects,
   DndContext,
   DragOverlay,
+  getFirstCollision,
   MouseSensor,
+  pointerWithin,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ColumnList from "./components/Column/ColumnList";
 import { groupTasksByColumn } from "../../utils/groupTasksByColumn";
@@ -42,7 +44,7 @@ function Home() {
   const [activeDragItemData, setActiveDragItemData] = useState(null);
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] =
     useState(null);
-
+  const lastOverId = useRef(null);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 10 },
   });
@@ -333,6 +335,41 @@ function Home() {
     setOldColumnWhenDraggingCard(null);
   };
 
+  // Custom lại thuật toán phát hiện va chạm tối ưu cho việc kéo thả
+  const collisionDetectionStrategy = useCallback(
+    (args) => {
+      if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+        return closestCorners({ ...args });
+      }
+      // First, let's see if there are any collisions with the pointer
+      const pointerIntersection = pointerWithin(args);
+
+      if (!pointerIntersection?.length) return;
+
+      let overId = getFirstCollision(pointerIntersection, "id");
+      if (overId) {
+        const checkColumn = orderedColumns.find((col) => col.column === overId);
+        if (checkColumn) {
+          const orderedColumnIds = checkColumn?.tasks?.map((c) => c._id);
+          overId = closestCorners({
+            ...args,
+            droppableContainers: args.droppableContainers.filter(
+              (container) =>
+                container.id !== overId &&
+                orderedColumnIds?.includes(container.id)
+            )[0]?.id,
+          });
+          overId = orderedColumnIds[orderedColumnIds.length - 1];
+        }
+
+        lastOverId.current = overId;
+        return [{ id: overId }];
+      }
+      return lastOverId.current ? [{ id: lastOverId.current }] : [];
+    },
+    [activeDragItemType, orderedColumns]
+  );
+
   useEffect(() => {
     dispatch(getTasksMiddleware());
   }, [dispatch]);
@@ -350,7 +387,8 @@ function Home() {
         </p>
       )}
       <DndContext
-        collisionDetection={closestCorners}
+        // collisionDetection={closestCorners}
+        collisionDetection={collisionDetectionStrategy}
         sensors={sensors}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
