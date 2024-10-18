@@ -44,7 +44,7 @@ function Home() {
   const [activeDragItemData, setActiveDragItemData] = useState(null);
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] =
     useState(null);
-  const lastOverId = useRef(null);
+
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 10 },
   });
@@ -132,7 +132,6 @@ function Home() {
       }
 
       if (dataSynchronizationStatus) {
-        console.log("Fetch data");
         handleDataSynchronization(nextColumns);
       }
 
@@ -213,11 +212,16 @@ function Home() {
           nextOverColumn.tasks = nextOverColumn.tasks.filter(
             (task) => task._id !== activeDraggingCardId
           );
+          // Cập nhật lại column chuẩn cho card
+          const rebuild_activeDraggingCardData = {
+            ...activeDraggingCardData,
+            column: nextOverColumn.column,
+          };
           // Thêm cái card đang kéo vào over column theo index mới
           nextOverColumn.tasks = nextOverColumn.tasks.toSpliced(
             newCardIndex,
             0,
-            activeDraggingCardData
+            rebuild_activeDraggingCardData
           );
         }
         return nextColumns;
@@ -286,11 +290,16 @@ function Home() {
             nextOverColumn.tasks = nextOverColumn.tasks.filter(
               (task) => task._id !== activeDraggingCardId
             );
+            // Cập nhật lại column chuẩn cho card
+            const rebuild_activeDraggingCardData = {
+              ...activeDraggingCardData,
+              column: nextOverColumn.column,
+            };
             // Thêm cái card đang kéo vào over column theo index mới
             nextOverColumn.tasks = nextOverColumn.tasks.toSpliced(
               newCardIndex,
               0,
-              activeDraggingCardData
+              rebuild_activeDraggingCardData
             );
           }
 
